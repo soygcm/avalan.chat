@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesseract Visualization</title>
+    <style>
+        body { margin: 0; display: flex; flex-direction: column; align-items: center; }
+        canvas { display: block; margin-top: 10px; }
+        .controls { margin-top: 20px; }
+        .slider { margin: 10px; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
+
+    <div class="controls">
+        <label for="rotX">X-Axis Rotation:</label>
+        <input id="rotX" class="slider" type="range" min="-180" max="180" step="1" value="0">
+        
+        <label for="rotY">Y-Axis Rotation:</label>
+        <input id="rotY" class="slider" type="range" min="-180" max="180" step="1" value="0">
+        
+        <label for="rotZ">Z-Axis Rotation:</label>
+        <input id="rotZ" class="slider" type="range" min="-180" max="180" step="1" value="0">
+        
+        <label for="rotW">W-Axis Rotation:</label>
+        <input id="rotW" class="slider" type="range" min="-180" max="180" step="1" value="0">
+    </div>
+
+    <script>
+        // Tesseract vertices in 4D (tesseract corners)
+        const vertices4D = [
+            [-1, -1, -1, -1], [1, -1, -1, -1], [1, 1, -1, -1], [-1, 1, -1, -1],
+            [-1, -1, 1, -1], [1, -1, 1, -1], [1, 1, 1, -1], [-1, 1, 1, -1],
+            [-1, -1, -1, 1], [1, -1, -1, 1], [1, 1, -1, 1], [-1, 1, -1, 1],
+            [-1, -1, 1, 1], [1, -1, 1, 1], [1, 1, 1, 1], [-1, 1, 1, 1]
+        ];
+
+        // Mapping 4D to 3D projection
+        function projectTo3D(v) {
+            const [x, y, z, w] = v;
+            const factor = 1 / (1 - w * 0.1); // Perspective projection factor
+            return [x * factor, y * factor, z * factor];
+        }
+
+        // Create 3D scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.3, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth/2, window.innerHeight/2);
+        document.body.appendChild(renderer.domElement);
+
+        // Create geometry and material for the edges
+        const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+
+        // Create a new BufferGeometry
+        const geometry = new THREE.BufferGeometry();
+
+        // Create vertices for the Tesseract projection
+        let projectedVertices = vertices4D.map(v => projectTo3D(v));
+
+        const positions = [];
+        // Create lines between projected vertices
+        const edges = [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7],
+            [8, 9], [9, 10], [10, 11], [11, 8],
+            [12, 13], [13, 14], [14, 15], [15, 12],
+            [8, 12], [9, 13], [10, 14], [11, 15],
+            [0, 8], [1, 9], [2, 10], [3, 11],
+            [4, 12], [5, 13], [6, 14], [7, 15]
+        ];
+
+        edges.forEach(([start, end]) => {
+            const startVertex = projectedVertices[start];
+            const endVertex = projectedVertices[end];
+            positions.push(...startVertex, ...endVertex);
+        });
+
+        // Set the positions to the buffer geometry
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+        const line = new THREE.LineSegments(geometry, material);
+        scene.add(line);
+
+        // Set camera position
+        camera.position.z = 5;
+
+        // Function to apply rotations
+        function rotateTesseract() {
+            const rotX = parseFloat(document.getElementById("rotX").value) * Math.PI / 180;
+            const rotY = parseFloat(document.getElementById("rotY").value) * Math.PI / 180;
+            const rotZ = parseFloat(document.getElementById("rotZ").value) * Math.PI / 180;
+            const rotW = parseFloat(document.getElementById("rotW").value) * Math.PI / 180;
+
+            // Apply rotations to the tesseract
+            line.rotation.x = rotX;
+            line.rotation.y = rotY;
+            line.rotation.z = rotZ;
+
+            // W-axis rotation can be done by manipulating the vertices before projection
+            projectedVertices = vertices4D.map(([x, y, z, w]) => {
+                // Apply rotation on the 4th dimension (w-axis)
+                const cosW = Math.cos(rotW);
+                const sinW = Math.sin(rotW);
+                const newW = cosW * w - sinW * x;
+                const newX = sinW * w + cosW * x;
+
+                return [newX, y, z, newW]; // Return the updated 4D vertex
+            });
+
+            // Re-project the vertices after the w-axis rotation
+            const newPositions = [];
+            edges.forEach(([start, end]) => {
+                const startVertex = projectTo3D(projectedVertices[start]);
+                const endVertex = projectTo3D(projectedVertices[end]);
+                newPositions.push(...startVertex, ...endVertex);
+            });
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
+        }
+
+        // Animation loop
+        const animate = function () {
+            requestAnimationFrame(animate);
+            rotateTesseract();
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+</html>
