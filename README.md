@@ -16,6 +16,10 @@ npm install -g http-server
 
 ### Running the Server
 
+```sh
+npx eslint --init
+```
+
 ```sh {"background":"true"}
 http-server
 ```
