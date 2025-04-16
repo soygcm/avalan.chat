@@ -20,5 +20,5 @@ Settings.llm = llm
 index = load_index_from_storage(storage_context)
 
 query_engine = index.as_query_engine()
-response = query_engine.query("Cómo dirías que Vale es? cual es su personalidad?")
+response = query_engine.query("Como es el pelo de Vale?")
 print(response)

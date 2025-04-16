@@ -23,6 +23,7 @@ http-server
 ## Avalancha
 
 1. Hacer preguntas para entender de que se trata el proyecto.
+
    1. Hacer preguntas y categorías
    2. Guardarlo en una DB
 
@@ -37,3 +38,7 @@ http-server
 ```sh
 pipreqs src/
 ```
+
+## ¿Que hacer hoy?
+
+[ ] Usar la base de datos de chrome, guardar una tarea.
