@@ -26,6 +26,25 @@ http-server
 
 ## Avalancha
 
+* Crea y organiza tareas (usando preguntas generadoras) (Mental map)
+* Te permite documentar tu progreso (no simplemente borrando las tareas si no manteniendo la información descubierta allí, bien organizada)
+* Permite buscar en las tareas.
+* Permite recortarlas y mezclar las tareas.
+* Te "notifica" para que no abandones tus proyectos.
+* Te mantiene enfocado en la tarea mas importante.
+
+## Infra:
+* Autenticación con la cosa mas simple y barata que exista
+* Funciones serverless las mas baratas para la interacción con los LLM
+
+### Futuro:
+* Exportar tus datos en documentos de word y excel (Para google drive o word, notion, confluence, etc.)
+* Agregar tus datos actuales (código, documentos, etc)
+* Usar otros LLMs
+* Desacoplarte y montar tu propia infraestructura (autenticación, LLMs, DBs, etc)
+
+### Flujo:
+
 1. Hacer preguntas para entender de que se trata el proyecto.
 
    1. Hacer preguntas y categorías
@@ -42,7 +61,3 @@ http-server
 ```sh
 pipreqs src/
 ```
-
-## ¿Que hacer hoy?
-
-[ ] Usar la base de datos de chrome, guardar una tarea.
