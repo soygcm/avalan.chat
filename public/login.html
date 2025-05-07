@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAuthn Login</title>
+</head>
+<body>
+    <h1>WebAuthn Login</h1>
+    <input type="text" id="username" placeholder="Username">
+    <br><br>
+    <button id="registerButton">Register</button>
+    <button id="loginButton">Login</button>
+
+    <script type="module">
+        import { registerUser, authenticateUser } from './webauthn.js';
+
+        document.getElementById('registerButton').addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            registerUser(username);
+        });
+
+        document.getElementById('loginButton').addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            authenticateUser(username);
+        });
+    </script>
+    <script type="module" src="./webauthn.js"></script>
+</body>
+</html>
