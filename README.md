@@ -14,14 +14,23 @@ Make sure you have Node.js installed. You can download it from [nodejs.org](http
 npm install -g http-server
 ```
 
-### Running the Server
-
 ```sh
 npx eslint --init
 ```
 
+
+## Running the Server
+
+### Locally
+
 ```sh {"background":"true"}
 http-server
+```
+
+## Deployment
+
+```
+firebase deploy --only functions
 ```
 
 ## Avalancha

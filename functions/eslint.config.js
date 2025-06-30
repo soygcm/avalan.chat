@@ -1,24 +1,41 @@
 // eslint.config.js
-import { defineConfig } from "@eslint/config-helpers";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
-import pluginImport from "eslint-plugin-import";
+import eslintPluginImport from "eslint-plugin-import";
+import js from "@eslint/js";
 
-export default defineConfig({
-  files: ["**/*.js"], // Specify files to apply this config to
-  languageOptions: {
-    globals: { ...globals.node, ...globals.es2021 }, // Combine node and es2021 environments
-    parserOptions: { sourceType: "module", ecmaVersion: 2018 },
-  },
-  extends: [
-    "eslint:recommended",
-    "google",
-  ],
-  plugins: {pluginImport},
-  rules: {
-    "no-restricted-globals": ["error", "name", "length"],
-    "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
-    "import/extensions": "off",
-    "import/no-unresolved": "error",
-  },
-});
+export default defineConfig([
+  eslintPluginImport.flatConfigs.recommended,
+  js.configs.recommended,
+  {
+    files: ["**/*.js"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.es2021,
+      },
+      parserOptions: {
+        sourceType: "module",
+        ecmaVersion: "latest",
+      },
+    },
+    rules: {
+      // Custom rules
+      "no-restricted-globals": ["error", "name", "length"],
+      "prefer-arrow-callback": "error",
+      "quotes": ["error", "double", { "allowTemplateLiterals": true }],
+      "import/extensions": "off",
+      "import/no-unresolved": "error",
+
+      // Google style guide rules (key ones)
+      "indent": ["error", 2],
+      "linebreak-style": ["error", "unix"],
+      "semi": ["error", "always"],
+      "comma-dangle": ["error", "always-multiline"],
+      "max-len": ["error", { "code": 80 }],
+      "camelcase": "error",
+      "new-cap": "error",
+      "no-var": "error",
+      "prefer-const": "error",
+    },
+  }]);
