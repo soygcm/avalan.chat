@@ -2,7 +2,9 @@
     "cSpell.words": [
         "Compa",
         "dotenv",
-        "llms"
+        "firestore",
+        "llms",
+        "webauthn"
     ],
     "eslint.validate": [
         "javascript",

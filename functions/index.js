@@ -1,6 +1,6 @@
 // The Firebase Admin SDK to access Firestore.
 
-import { onCall } from "firebase-functions/v2/https";
+import { HttpsError, onCall } from "firebase-functions/v2/https";
 import * as functions from "firebase-functions";
 import { initializeApp, firestore } from "firebase-admin";
 initializeApp();
@@ -12,12 +12,12 @@ const webauthnFunctions = {};
 webauthnFunctions.registerUser = onCall(async (request) => {
   const { username, credential } = request.data; // Assuming the request data is nested under 'data'
   if (!username || !credential) {
-    throw new onCall.HttpsError("invalid-argument", "Missing username or credential");
+    throw new HttpsError("invalid-argument", `Missing username or authentication data. actual data is: ${JSON.stringify(request.data)}`);
   }
   const userRef = db.collection("users").doc(username);
   const doc = await userRef.get();
   if (doc.exists) {
-    throw new onCall.HttpsError("already-exists", "User already exists");
+    throw new HttpsError("already-exists", `User '${username}' already exists`);
   }
   await userRef.set({ credential });
   return { success: true };
@@ -26,14 +26,18 @@ webauthnFunctions.registerUser = onCall(async (request) => {
 webauthnFunctions.authenticateUser = onCall(async (request) => {
   const { username, clientDataJSON, authenticatorData } = request.data;
   if (!username || !clientDataJSON || !authenticatorData) {
-    throw new onCall.HttpsError("invalid-argument", "Missing username or authentication data");
+    throw new HttpsError("invalid-argument", `Missing username or authentication data. actual data is: ${JSON.stringify(request.data)}`);
   }
   const userRef = db.collection("users").doc(username);
   const doc = await userRef.get();
-  if (!doc.exists) {
-    throw new functions.https.HttpsError("not-found", "User not found");
+  if (!doc || !doc.exists) {
+    throw new HttpsError("not-found", `User '${username}' not found.`);
   }
-  const storedCredential = doc.data().credential;
+  const storedCredential = doc.data()?.credential;
+
+  if(!storedCredential){
+    throw new HttpsError("not-found", `Credential for ${username} not found inside data()`);
+  }
   return { success: true, storedCredential };
 });
 
