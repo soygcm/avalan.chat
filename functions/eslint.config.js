@@ -1,11 +1,9 @@
 // eslint.config.js
 import { defineConfig } from "eslint/config";
 import globals from "globals";
-import eslintPluginImport from "eslint-plugin-import";
 import js from "@eslint/js";
 
 export default defineConfig([
-  eslintPluginImport.flatConfigs.recommended,
   js.configs.recommended,
   {
     files: ["**/*.js"],
@@ -24,8 +22,6 @@ export default defineConfig([
       "no-restricted-globals": ["error", "name", "length"],
       "prefer-arrow-callback": "error",
       "quotes": ["error", "double", { "allowTemplateLiterals": true }],
-      "import/extensions": "off",
-      "import/no-unresolved": "error",
 
       // Google style guide rules (key ones)
       "indent": ["error", 2],

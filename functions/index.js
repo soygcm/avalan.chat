@@ -1,5 +1,3 @@
-// The Firebase Admin SDK to access Firestore.
-
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { initializeApp, firestore } from "firebase-admin";
 initializeApp();
