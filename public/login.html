@@ -11,20 +11,6 @@
     <br><br>
     <button id="registerButton">Register</button>
     <button id="loginButton">Login</button>
-
-    <script type="module">
-        import { registerUser, authenticateUser } from './webauthn.js';
-
-        document.getElementById('registerButton').addEventListener('click', () => {
-            const username = document.getElementById('username').value;
-            registerUser(username);
-        });
-
-        document.getElementById('loginButton').addEventListener('click', () => {
-            const username = document.getElementById('username').value;
-            authenticateUser(username);
-        });
-    </script>
-    <script type="module" src="./webauthn.js"></script>
+    <script type="module" src="web/src/webauthn.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ async function main(){
     
     //startDB
     const taskVault = await IDBTaskVault()
-    await loop(taskVault)
+    // await loop(taskVault)
 }
 
 main().catch(console.error)

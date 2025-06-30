@@ -1,29 +1,23 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+// The Firebase Admin SDK to access Firestore.
 
-const { onCall } = require("firebase-functions/v2/https");
-const admin = require("firebase-admin");
-admin.initializeApp();
+import { onCall } from "firebase-functions/v2/https";
+import * as functions from "firebase-functions";
+import { initializeApp, firestore } from "firebase-admin";
+initializeApp();
 
-const db = admin.firestore();
+const db = firestore();
 
 const webauthnFunctions = {};
 
 webauthnFunctions.registerUser = onCall(async (request) => {
-  const { username, credential } = request.data;
+  const { username, credential } = request.data; // Assuming the request data is nested under 'data'
   if (!username || !credential) {
-    throw new functions.https.HttpsError("invalid-argument", "Missing username or credential");
+    throw new onCall.HttpsError("invalid-argument", "Missing username or credential");
   }
   const userRef = db.collection("users").doc(username);
   const doc = await userRef.get();
   if (doc.exists) {
-    throw new functions.https.HttpsError("already-exists", "User already exists");
+    throw new onCall.HttpsError("already-exists", "User already exists");
   }
   await userRef.set({ credential });
   return { success: true };
@@ -32,7 +26,7 @@ webauthnFunctions.registerUser = onCall(async (request) => {
 webauthnFunctions.authenticateUser = onCall(async (request) => {
   const { username, clientDataJSON, authenticatorData } = request.data;
   if (!username || !clientDataJSON || !authenticatorData) {
-    throw new functions.https.HttpsError("invalid-argument", "Missing username or authentication data");
+    throw new onCall.HttpsError("invalid-argument", "Missing username or authentication data");
   }
   const userRef = db.collection("users").doc(username);
   const doc = await userRef.get();
@@ -43,4 +37,5 @@ webauthnFunctions.authenticateUser = onCall(async (request) => {
   return { success: true, storedCredential };
 });
 
-module.exports = webauthnFunctions;
+export default { webauthnFunctions };
+
