@@ -16,7 +16,7 @@ export default defineConfig([
       ...js.configs.recommended.rules,
       "import/extensions": [
         "error",
-        "always",
+        "ignorePackages",
         {
           js: "always",
           ts: "never"

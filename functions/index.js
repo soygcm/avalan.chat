@@ -1,8 +1,9 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { initializeApp, firestore } from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 initializeApp();
 
-const db = firestore();
+const db = getFirestore();
 
 const webauthnFunctions = {};
 
