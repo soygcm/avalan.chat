@@ -14,15 +14,6 @@ export default defineConfig([
     },
     rules: {
       ...js.configs.recommended.rules,
-      "import/extensions": [
-        "error",
-        "ignorePackages",
-        {
-          js: "always",
-          ts: "never"
-        }
-      ],
-      "import/no-unresolved": "off"
     }
   },
   // @ts-expect-error Type 'Config' is not assignable to type 'InfiniteArray<ConfigWithExtends>'.

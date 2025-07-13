@@ -1,4 +1,3 @@
-
 import { getFunctions, httpsCallable } from 'https://esm.sh/firebase/functions';
 import { app } from './integration/firebase/firebaseConfig.js';
 
